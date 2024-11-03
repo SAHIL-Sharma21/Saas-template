@@ -1,3 +1,4 @@
+// import { authMiddleware, clerkClient } from "@clerk/nextjs/server";
 import { authMiddleware, clerkClient } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
 
