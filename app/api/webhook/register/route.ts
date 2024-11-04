@@ -42,4 +42,34 @@ export async function POST(req: NextRequest) {
     const {id} = event.data;
     const eventType = event.type;
     
+    //logs
+    if(eventType === "user.created"){
+        try {
+            const {email_addresses, primary_email_address_id} = event.data;
+            console.log(email_addresses, primary_email_address_id);
+
+            // optional
+            const primaryEmail = email_addresses.find((email) => email.id === primary_email_address_id);
+
+            if(!primaryEmail){
+                return new Response("No Primary Email", {status: 400});
+            }
+
+            //create a user in DB
+            const newUser = await prisma.user.create({
+                data: {
+                    id: event.data.id,
+                    email: primaryEmail.email_address,
+                    isSubscribed: false,
+                }
+            });
+
+            console.log("New user created", newUser); //developer console
+            //can retunt the respons as new user....
+        } catch (error: any) {
+            return new Response("Error creating user in database", {status: 400})
+        }
+    }
+
+    return new Response("Webhook recieved successfully", {status: 200});
 }
