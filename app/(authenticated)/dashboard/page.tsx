@@ -9,6 +9,8 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
+import {TodoForm} from '@/components/TodoForm';
+
 
 function Dashboard() {
   const { user } = useUser();
@@ -137,7 +139,9 @@ function Dashboard() {
           <CardHeader>
             <CardTitle>Add New Todos</CardTitle>
           </CardHeader>
-          <CardContent>{/* Todo form  */}</CardContent>
+          <CardContent>
+            <TodoForm onSubmit={handleAddTodo} />
+          </CardContent>
         </Card>
         {!isSubscribed && todos.length >= 3 && (
           <Alert variant="destructive" className="mb-8">
