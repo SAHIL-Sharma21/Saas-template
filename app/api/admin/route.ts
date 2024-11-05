@@ -15,7 +15,7 @@ async function isAdmin(userId: string) {
 export async function GET(req: NextRequest) {
   const { userId } = auth();
 
-  if (!userId) {
+  if (!userId || !(await isAdmin(userId))) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
