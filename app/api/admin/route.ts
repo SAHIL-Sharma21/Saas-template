@@ -64,13 +64,11 @@ export async function GET(req: NextRequest) {
 export async function PUT(req: NextRequest) {
     const {userId} = auth();
 
-
     if(!userId || !(await isAdmin(userId))){
         return NextResponse.json({error: "Unauthorized"}, {status: 401});
     }
 
     try {
-
         const {email, isSubscribed, todoId, todoCompleted, todoTitle} = await req.json();
 
         //if user is subscribed then updating
@@ -105,4 +103,29 @@ export async function PUT(req: NextRequest) {
     }
 }   
 
-export async function DELETE(req: NextRequest) {}
+export async function DELETE(req: NextRequest) {
+    const {userId} = auth();
+
+    if(!userId || !(await isAdmin(userId))){
+        return NextResponse.json({error: "Unauthorized"}, {status: 401});
+    }
+
+    try {
+        const {todoId} = await req.json();
+
+        if(!todoId){
+            return NextResponse.json({error: "Todo Id is required"}, {status: 400});
+        }
+
+        await prisma.todo.delete({
+            where: {
+                id: todoId,
+            }
+        });
+
+        return NextResponse.json({error: "Todo Deleted Successfully"}, {status: 200});
+    } catch (error: any) {
+        return NextResponse.json({error: "Internal server Error."}, {status: 500});
+    }
+
+}
