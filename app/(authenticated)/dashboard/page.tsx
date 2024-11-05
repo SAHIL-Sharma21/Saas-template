@@ -9,8 +9,8 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
-import {TodoForm} from '@/components/TodoForm';
-
+import { TodoForm } from "@/components/TodoForm";
+import { TodoItem } from "@/components/TodoItem";
 
 function Dashboard() {
   const { user } = useUser();
@@ -170,7 +170,16 @@ function Dashboard() {
               </p>
             ) : (
               <>
-                <ul className="space-y-4">{/* todoItem, component  */}</ul>
+                <ul className="space-y-4">
+                  {todos.map((todo: Todo) => (
+                    <TodoItem
+                      key={todo.id}
+                      todo={todo}
+                      onUpdate={handleUpdateTodo}
+                      onDelete={handleDeleteTodo}
+                    />
+                  ))}
+                </ul>
                 {/* pagination component */}
               </>
             )}
