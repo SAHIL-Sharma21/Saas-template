@@ -2,7 +2,6 @@
 
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
-import { error } from "console";
 import { NextRequest, NextResponse } from "next/server";
 
 
