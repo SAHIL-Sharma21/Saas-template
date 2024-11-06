@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertTriangle, CheckCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
+import {BackButton} from '@/components/BackButton';
 
 export default function SubscribePage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -66,7 +67,7 @@ export default function SubscribePage() {
   return (
     <>
       <div className="container mx-auto p-4 max-w-3xl">
-        {/* backButton  */}
+        <BackButton />
         <h1 className="text-3xl font-bold mb-8 text-center">Subscriptions</h1>
         <Card>
           <CardHeader>
