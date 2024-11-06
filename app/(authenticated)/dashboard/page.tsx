@@ -11,6 +11,7 @@ import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { TodoForm } from "@/components/TodoForm";
 import { TodoItem } from "@/components/TodoItem";
+import {Pagination} from '@/components/Pagination';
 
 function Dashboard() {
   const { user } = useUser();
@@ -180,7 +181,11 @@ function Dashboard() {
                     />
                   ))}
                 </ul>
-                {/* pagination component */}
+                <Pagination 
+                totalPage={totalPages}
+                currentPage={currentPage}
+                onPageChange={(page) => fetchTodos(page)}
+                />
               </>
             )}
           </CardContent>
