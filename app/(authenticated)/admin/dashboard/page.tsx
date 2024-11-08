@@ -1,9 +1,12 @@
 // admin dashboard
 'use client';
 
-
+import { Pagination } from '@/components/Pagination';
+import { TodoItem } from '@/components/TodoItem';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 import { Todo, User } from '@prisma/client';
-import { ok } from 'assert';
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDebounceValue } from 'usehooks-ts';
 
@@ -125,12 +128,107 @@ export default function AdminDashboard() {
         }
     }
 
+    const handleSearchUser = (e: React.FormEvent) => {
+        e.preventDefault();
+        setDebouncedEmail(email);
+    } 
+
 
   return (
     <>
-        <div>
+        <div className='container mx-auto p-4 max-w-3xl mb-8'>
+            <h1 className='text-3xl font-bold mb-8 text-center'>Admin Dashboard</h1>
+            <Card className='mb-8'>
+                <CardHeader>
+                    <CardTitle>Search User</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <form onSubmit={handleSearchUser} className='flex space-x-2'>
+                        <Input 
+                        type='email'
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder='Enter User email'
+                        required
+                        />
+                        <Button type='submit'>Search</Button>
+                    </form>
+                </CardContent>
+            </Card>
+            {isLoading ? (
+                <>
+                    <Card>
+                        <CardContent className='text-center py-8'>
+                            <p className='text-muted-foreground'>Loading user Data....</p>
+                        </CardContent>
+                    </Card>
+                </>
+            ) : user ? (
+                <>
+                    <Card className='mb-8'>
+                        <CardHeader>
+                            <CardTitle>
+                                User Details
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p>Email: {user.email}</p>
+                            <p>
+                                Subscription Status:{" "}
+                                {user.isSubscribed ? "Subscribed" : "Not Subscribed"}
+                            </p>
+                            {user.subscriptionEnds && (
+                                <p>
+                                    Subscription Ends:{" "}
+                                    {new Date(user.subscriptionEnds).toLocaleDateString()}
+                                </p>
+                            )}
+                            <Button className='mt-2' onClick={handleUpdateSubcription}>
+                                {user.isSubscribed ? "Cancel subscription": "Subscribe"}
+                            </Button>
+                        </CardContent>
+                    </Card>  
 
+                    {user.todos.length > 0 ? (
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>user Todos</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <ul className='space-y-4'>
+                                    {user.todos.map((todo) => (
+                                        <TodoItem 
+                                        key={todo.id}
+                                        todo={todo}
+                                        isAdmin={true}
+                                        onUpdate={handleUpdateTodo}
+                                        onDelete={handleDeleteTodo}
+                                        />
+                                    ))}
+                                </ul>
+                                <Pagination 
+                                currentPage={currentPage}
+                                totalPage={totalPages}
+                                onPageChange={(page) => fetchUserData(page)}
+                                />
+                            </CardContent>
+                        </Card>
+                    ) : (
+                        <Card>
+                            <CardContent className='text-center py-8'>
+                                <p className='text-muted-foreground'>This User has no todos.</p>
+                            </CardContent>
+                        </Card>
+                    )}
+                </>
+            ) : debouncedEmail ? (
+                <Card>
+                    <CardContent className='text-center py-8'>
+                        <p className='text-muted-foreground'>No User found</p>
+                    </CardContent>
+                </Card>
+            ) : null}
         </div>
     </>
-  )
+  );
 }
