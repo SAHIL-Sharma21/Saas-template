@@ -31,12 +31,10 @@ export function Navbar() {
                       className="relative h-8 w-8 rounded-full"
                     >
                       <Avatar>
-                        <AvatarImage src={user.imageUrl} alt="User Avatar">
+                        <AvatarImage src={user.imageUrl} alt="User Avatar" />
                           <AvatarFallback>
                             {user.firstName?.charAt(0) || "U"}
                           </AvatarFallback>
-                          ?
-                        </AvatarImage>
                       </Avatar>
                     </Button>
                   </DropdownMenuTrigger>

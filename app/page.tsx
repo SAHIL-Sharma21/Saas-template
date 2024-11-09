@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { auth } from "@clerk/nextjs/server";
-import { Clock, Facebook, Github, List, Twitter, Users, X } from "lucide-react";
+import { Clock, Facebook, Github, List, Users, X } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
