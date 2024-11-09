@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { TodoForm } from "@/components/TodoForm";
 import { TodoItem } from "@/components/TodoItem";
 import {Pagination} from '@/components/Pagination';
+import { useToast } from "@/hooks/use-toast";
 
 function Dashboard() {
   const { user } = useUser();
@@ -22,6 +23,8 @@ function Dashboard() {
   const [loading, setLoading] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [debounceSearchTerm] = useDebounceValue(searchTerm, 300);
+  const {toast} = useToast();
+
 
   const fetchTodos = useCallback(
     async (page: number) => {
@@ -39,18 +42,27 @@ function Dashboard() {
         setTotalPages(data.totalPages);
         setCurrentPage(data.currentPage);
         setLoading(false);
+        toast({
+          title: "success",
+          description: "Todos Fetched succeddfully"
+        });
       } catch (error) {
         setLoading(false);
         console.error("Error fetching todos", error);
+        toast({
+          title: "Error",
+          description: "Failed to fetch todos. Please try again.",
+          variant: "destructive"
+        });
       }
     },
-    [debounceSearchTerm]
+    [debounceSearchTerm, toast]
   );
 
   useEffect(() => {
-    fetchTodos(1);
-    fetchSubscriptionStatus();
-  }, []);
+    // fetchTodos(1);
+    // fetchSubscriptionStatus();
+  }, [fetchTodos]);
 
   const fetchSubscriptionStatus = async () => {
     try {
@@ -64,13 +76,26 @@ function Dashboard() {
       const data = await response.json();
       setIsSubscribed(data.isSubscribed);
       setLoading(false);
+      toast({
+        title: "Success",
+        description: "Subscription status fetched successfully"        
+      });
     } catch (error) {
       setLoading(false);
       console.error("Error fetching subscription status", error);
+      toast({
+        title: "Error",
+        description: "Failed to fetch subscription status. Please try again.",
+        variant: "destructive"
+      });
     }
   };
 
   const handleAddTodo = async (title: string) => {
+    toast({
+      title: "Adding Todo",
+      description: "Please wait....",
+    });
     try {
       setLoading(true);
       const response = await fetch(`/api/todos`, {
@@ -82,16 +107,28 @@ function Dashboard() {
       if (!response.ok) {
         throw new Error("Failed to add todo");
       }
-      const data = await response.json();
       await fetchTodos(currentPage);
       setLoading(false);
+      toast({
+        title: "Success",
+        description: "Todo added successfully"
+      });
     } catch (error) {
       setLoading(false);
       console.error("Error adding todo", error);
+      toast({
+        title: "Error",
+        description: "Failed to add todo, Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
   const handleUpdateTodo = async (id: string, completed: boolean) => {
+    toast({
+      title: "Updating Todo",
+      description: "Please wait...",
+    });
     try {
       setLoading(true);
       const response = await fetch(`/api/todos/${id}`, {
@@ -102,16 +139,28 @@ function Dashboard() {
       if (!response.ok) {
         throw new Error("Failed to update todo");
       }
-      const data = await response.json();
       await fetchTodos(currentPage);
       setLoading(false);
+      toast({
+        title: "Success",
+        description: "Todo updated successfully"
+      });
     } catch (error) {
       setLoading(false);
       console.error("Error updating todo", error);
+      toast({
+        title: "Error",
+        description: "Failed to update todo, Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
   const handleDeleteTodo = async (id: string) => {
+    toast({
+      title: "Deleting Todo",
+      description: "Please wait...",
+    });
     try {
       setLoading(true);
       const response = await fetch(`/api/todos/${id}`, {
@@ -121,12 +170,20 @@ function Dashboard() {
       if (!response.ok) {
         throw new Error("Failed to delete todo");
       }
-
       await fetchTodos(currentPage);
       setLoading(false);
+      toast({
+        title: "Success",
+        description: "Todo deleted successfully",
+      });
     } catch (error) {
       setLoading(false);
       console.error("Error deleting todo", error);
+      toast({
+        title: "Error",
+        description: "Failed to delete todo, Please try again.",
+        variant: "destructive",
+      });
     }
   };
 

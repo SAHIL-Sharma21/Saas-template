@@ -1,7 +1,7 @@
 //subscription servivce
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
-import {  NextResponse } from "next/server";
+import {  NextRequest, NextResponse } from "next/server";
 
 export async function POST(){
     const {userId} = auth();
@@ -48,13 +48,14 @@ export async function POST(){
 }
 
 
-export async function GET(){
+export async function GET(req: NextRequest){
     const {userId} = auth();
 
     if(!userId){
         return NextResponse.json({error: "Unauthorized"}, {status: 401});
     }
 
+    
     try {
         const user = await prisma.user.findUnique({
             where: {

@@ -3,7 +3,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { clerkClient, auth } from "@clerk/nextjs/server";
 import prisma from "@/lib/prisma";
-import { json } from "stream/consumers";
 
 const ITEMS_PER_PAGE = 10;
 

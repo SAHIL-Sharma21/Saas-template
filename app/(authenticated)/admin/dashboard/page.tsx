@@ -6,6 +6,7 @@ import { TodoItem } from '@/components/TodoItem';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { useToast } from '@/hooks/use-toast';
 import { Todo, User } from '@prisma/client';
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDebounceValue } from 'usehooks-ts';
@@ -23,7 +24,7 @@ export default function AdminDashboard() {
     const [totalPages, setTotalPages] = useState(1);
     const [user, setUser] = useState<UserWithTodos | null>(null);
     const [debouncedEmail, setDebouncedEmail] = useDebounceValue("", 3000);
-
+    const {toast} = useToast();
 
     const fetchUserData = useCallback(async(page: number) => {
         setIsLoading(true);
@@ -38,14 +39,21 @@ export default function AdminDashboard() {
             setUser(data.user);
             setCurrentPage(data.currentPage)
             setTotalPages(data.totalPage)
-
-            //toast can be added here after succesfully fetching user data
+            toast({
+                title: "Success",
+                description: "User data fetched successfully",
+            });
         } catch (error: any) {
             console.error("Error fetching user data", error);
+            toast({
+                title: "Error",
+                description: "Failed to fetch user data. Please try again.",
+                variant: "destructive",
+            });
         } finally {
             setIsLoading(false);
         }
-    }, [debouncedEmail]);
+    }, [debouncedEmail, toast]);
 
 
     useEffect(() => {
@@ -70,11 +78,18 @@ export default function AdminDashboard() {
             if(!response.ok){
                 throw new Error("Failed to update subscription");
             }
-            // const data = await response.json();
             fetchUserData(currentPage);
-            // toast can be added here after succesfully updating subscription
+            toast({
+                title: "Success",
+                description: "Subscription updated successfuly",
+            });
         } catch (error) {
             console.error("Error updating subscription", error);
+            toast({
+                title: "Error",
+                description: "Failed to update subscription, Please try again.",
+                variant: "destructive",
+            });
         } finally {
             setIsLoading(false);
         }
@@ -82,6 +97,10 @@ export default function AdminDashboard() {
 
 
     const handleUpdateTodo = async(id: string, completed: boolean) => {
+        toast({
+            title: "Updating Todo",
+            description: "Please wait...",
+        });
         setIsLoading(true);
         try {
             const response = await fetch("/api/admin", {
@@ -95,11 +114,18 @@ export default function AdminDashboard() {
             });
 
             if(!response.ok) throw new Error("Failed to update todo");
-
             fetchUserData(currentPage);
-            // toast can be added here after succesfully updating todo
+            toast({
+                title: "Success",
+                description: "Todo updated successfully",
+            });
         } catch (error: any) {
             console.error("Error updating todo", error);
+            toast({
+                title: "Error",
+                description: "Failed to update todo, Please try again.",
+                variant: "destructive",
+            });
         } finally {
             setIsLoading(false);
         }
@@ -107,6 +133,10 @@ export default function AdminDashboard() {
 
 
     const handleDeleteTodo = async(id: string) => {
+        toast({
+            title: "Deleting Todo",
+            description: "Please wait...",
+        });
         setIsLoading(true);
         try {
             const response = await fetch("/api/admin", {
@@ -118,11 +148,19 @@ export default function AdminDashboard() {
             });
 
             if(!response.ok) throw new Error("Failed to delete todo");
-
             fetchUserData(currentPage);
             // toast can be added here after succesfully deleting todo
+            toast({
+                title: "Success",
+                description: "Todo deleted successfully",
+            });
         } catch (error: any) {
             console.error("Error deleting todo", error);
+            toast({
+                title: "Error",
+                description: "Failed to delete todo, Please try again.",
+                variant: "destructive",
+            });
         } finally {
             setIsLoading(false);
         }

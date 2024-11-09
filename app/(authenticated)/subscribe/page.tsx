@@ -7,12 +7,15 @@ import { AlertTriangle, CheckCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useCallback, useEffect, useState } from "react";
 import {BackButton} from '@/components/BackButton';
+import { useToast } from "@/hooks/use-toast";
 
 export default function SubscribePage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubscribed, SetIsSubscribed] = useState<Boolean>(false);
   const [subscriptionEnds, setSubscriptionEnds] = useState<string | null>(null);
   const router = useRouter();
+  const {toast} = useToast();
+
 
   const fetchSubcriptionStatus = useCallback(async () => {
     try {
@@ -26,11 +29,20 @@ export default function SubscribePage() {
       SetIsSubscribed(data.isSubscribed);
       setSubscriptionEnds(data.subscriptionEnds);
       setIsLoading(false);
+      toast({
+        title: "Success",
+        description: "Subscription status fetched successfully",
+      });
     } catch (error) {
       setIsLoading(false);
       console.error("Error fetching subscription status", error);
+      toast({
+        title: "Error",
+        description: "Failed to fetch subscription status, Please try again.",
+        variant: "destructive",
+      });
     }
-  }, []);
+  }, [toast]);
 
   useEffect(() => {
     fetchSubcriptionStatus();
@@ -45,18 +57,27 @@ export default function SubscribePage() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to subscribe");
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to subscribe");
       }
 
       const data = await response.json();
-
       SetIsSubscribed(true);
       setSubscriptionEnds(data.subscriptionEnds);
       router.refresh();
       setIsLoading(false);
+      toast({
+        title: "Success",
+        description: "You have succeessfully subscribed",
+      });
     } catch (error) {
       setIsLoading(false);
       console.error("Error subscribing", error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "An error occured while subscribing. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
