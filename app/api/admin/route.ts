@@ -1,8 +1,10 @@
 //admin routes
-
-import prisma from "@/lib/prisma";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { NextRequest, NextResponse } from "next/server";
+import {db} from '@/lib/drizzle';
+import { todos, users } from "@/drizzle/schema";
+import { count, desc, eq } from "drizzle-orm";
+
 
 const ITEMS_PER_PAGE = 10;
 
@@ -24,33 +26,42 @@ export async function GET(req: NextRequest) {
   const page = parseInt(searchParams.get("page") || "1");
 
   try {
-    let user;
+    let userData;
     if (email) {
-      user = await prisma.user.findUnique({
-        where: {
-          email: email,
-        },
-        include: {
-          todos: {
-            orderBy: { createdAt: "desc" },
-            take: ITEMS_PER_PAGE,
-            skip: (page - 1) * ITEMS_PER_PAGE,
-          },
-        },
-      });
+      const userResult = await db
+        .select()
+        .from(users)
+        .where(eq(users.email, email))
+        .limit(1);
+
+        if(userResult.length > 0){
+          const userTodos = await db
+            .select()
+            .from(todos)
+            .where(eq(todos.userId, userResult[0].id))
+            .orderBy(desc(todos.createdAt))
+            .limit(ITEMS_PER_PAGE)
+            .offset((page -1) * ITEMS_PER_PAGE);
+
+            userData = {
+              ...userResult[0],
+              todos: userTodos,
+            }
+        }
     }
 
-    const totalItems = email
-      ? await prisma.user.count({
-          where: {
-            email: email,
-          },
-        })
+    const totalItems: number = email ? 
+      await db.select({count: count()})
+        .from(users)
+        .where(eq(users.email, email))
+        .then((result) => result[0]?.count || 0)
       : 0;
 
+
     const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
     return NextResponse.json(
-      { user, totalPages, currentPage: page },
+      { user: userData, totalPages, currentPage: page },
       { status: 200 }
     );
   } catch (error: any) {
@@ -73,28 +84,27 @@ export async function PUT(req: NextRequest) {
 
         //if user is subscribed then updating
         if(isSubscribed !== undefined){
-            await prisma.user.update({
-                where: {
-                    email,
-                },
-                data: {
-                    isSubscribed,
-                    subscriptionEnds: isSubscribed ? new Date(Date.now() + 30 * 34 * 60 * 60 * 1000) : null,
-                }
-            });
+            await db
+                .update(users)
+                .set({
+                  isSubscribed: isSubscribed,
+                  subscriptionEnds: isSubscribed ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() : null,
+                })
+                .where(eq(users.email, email));
         }
 
         //if we have todo
         if(todoId){
-            await prisma.todo.update({
-                where: {
-                    id: todoId,
-                },
-                 data: {
-                    completed: todoCompleted !== undefined ? todoCompleted : false,
-                    title: todoTitle || undefined,
-                 }
-            });
+          const updateData: any = {};
+          if(todoCompleted !== undefined){
+            updateData.completed = todoCompleted;
+          }
+          if(todoTitle) updateData.title = todoTitle;
+
+          await db
+            .update(todos)
+            .set(updateData)
+            .where(eq(todos.id, todoId));
         }
 
         return NextResponse.json({message: "Updated successfully"}, {status: 200});
@@ -117,11 +127,9 @@ export async function DELETE(req: NextRequest) {
             return NextResponse.json({error: "Todo Id is required"}, {status: 400});
         }
 
-        await prisma.todo.delete({
-            where: {
-                id: todoId,
-            }
-        });
+        await db
+            .delete(todos)
+            .where(eq(todos.id, todoId));
 
         return NextResponse.json({error: "Todo Deleted Successfully"}, {status: 200});
     } catch (error: any) {
