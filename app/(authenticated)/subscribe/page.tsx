@@ -90,9 +90,9 @@ export default function SubscribePage() {
       <div className="container mx-auto p-4 max-w-3xl">
         <BackButton />
         <h1 className="text-3xl font-bold mb-8 text-center">Subscriptions</h1>
-        <Card>
+        <Card className="bg-gray-800">
           <CardHeader>
-            <CardTitle>Your Subscription status</CardTitle>
+            <CardTitle className="text-white">Your Subscription status</CardTitle>
           </CardHeader>
           <CardContent>
             {isSubscribed ? (

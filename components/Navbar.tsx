@@ -14,11 +14,11 @@ export function Navbar() {
 
   return (
     <>
-      <nav className="bg-background border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav className="bg-gray-900 border-b">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between">
           <div className="flex justify-between h-16">
             <Link href="/" className="flex-shrink-0 flex items-center">
-              <span className="ml-2 text-xl font-bold">Todo Master</span>
+              <span className="ml-2 text-white text-xl font-bold">Todo Master</span>
             </Link>
           </div>
           <div className="flex items-center">

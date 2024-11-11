@@ -13,20 +13,21 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-black bg-gradient-to-b from-background to-primary/10">
+    <div className="min-h-screen flex flex-col bg-slate-900 ">
       <div className="container mx-auto px-4 py-12 flex-grow">
-        <Card className="mb-12 border-none bg-gradient-to-r from-primary/20 to-secondary/20">
+        <Card className="mb-12 border-none bg-gray-800 bg-gradient-to-r from-primary/10 to-secondary/10">
           <CardHeader>
-            <CardTitle className="text-5xl font-extrabold text-center bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
+            <CardTitle className="text-5xl font-extrabold text-white text-center bg-clip-text ">
               Welcome to Todo Master
             </CardTitle>
           </CardHeader>
           <CardContent>
             <p className="ext-center text-xl text-muted-foreground mb-8">
-              Revolutionize your productivity with TodoMaster - The utlimate
-              task management solution for teams and professional.
+              Revolutionize your productivity with TodoMaster
+              <br />
+              The utlimate task management solution for teams and professional.
             </p>
-            <div>
+            <div className="flex justify-start gap-4">
               <Button asChild size="lg" className="text-lg">
                 <Link href="/sign-up">Start for Free</Link>
               </Button>
@@ -39,9 +40,9 @@ export default function Home() {
 
         {/* feature section  */}
 
-        <Card>
+        <Card className="mb-12 bg-slate-800 border-none">
           <CardHeader>
-            <CardTitle className="ext-3xl font-bold text-center text-primary">
+            <CardTitle className="text-3xl font-bold text-white text-center">
               Powerful Features for effortless Task management
             </CardTitle>
           </CardHeader>
@@ -81,27 +82,27 @@ export default function Home() {
         </Card>
 
         {/* testimonials  */}
-        <Card className="mb-12 border-none bg-gradient-to-r from-secondary/20 to-primary/20">
+        <Card className="mb-12 border-none bg-gray-800">
           <CardHeader>
-            <CardTitle className="text-3xl font-bold text-center">
+            <CardTitle className="text-3xl font-bold text-white text-center">
               What Our Users Say
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid md:grid-cols-2 gap-6">
-              <blockquote className="italic text-lg text-muted-foreground">
+              <blockquote className="italic text-lg text-gray-300 text-muted-foreground">
                 &ldquo;TodoMaster has transformed the way our team manages
                 projects. It&apos;s intuitive, powerful, and
                 indispensable!&rdquo;
-                <footer className="text-right font-semibold mt-2">
+                <footer className="text-right text-gray-400 font-semibold mt-2">
                   - Sarah J., Project Manager
                 </footer>
               </blockquote>
-              <blockquote className="italic text-lg text-muted-foreground">
+              <blockquote className="italic text-lg text-gray-300 text-muted-foreground">
                 &ldquo;I&apos;ve tried many task management apps, but TodoMaster
                 is by far the best. It&apos;s boosted my productivity
                 tenfold!&rdquo;
-                <footer className="text-right font-semibold mt-2">
+                <footer className="text-right font-semibold mt-2 text-gray-400 ">
                   - Mark T., Entrepreneur
                 </footer>
               </blockquote>
@@ -111,33 +112,33 @@ export default function Home() {
       </div>
 
       {/* footer  */}
-      <footer className="bg-muted py-8">
+      <footer className="bg-black py-8 ">
         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
           <div className="flex justify-center space-x-6 mb-4 md:mb-0">
             <a
               href="#"
-              className="text-muted-foreground hover:text-primary transition-colors"
+              className="text-muted-foreground text-white hover:text-primary transition-colors"
             >
               <span className="sr-only">Githbub</span>
               <Github className="h-8 w-8" />
             </a>
             <a
               href="#"
-              className="text-muted-foreground hover:text-primary transition-colors"
+              className="text-muted-foreground text-white hover:text-primary transition-colors"
             >
-              <span>Twitter</span>
+              <span className="sr-only">Twitter</span>
               <X className="h-8 w-8" />
             </a>
             <a
               href="#"
-              className="text-muted-foreground hover:text-primary transition-colors"
+              className="text-muted-foreground hover:text-primary text-white transition-colors"
             >
               <span className="sr-only">Facebook</span>
               <Facebook className="h-8 w-8" />
             </a>
           </div>
-          <p className="text-center text-sm text-muted-foreground">
-            &copy; 2023 TodoMaster. All rights reserved. |{" "}
+          <p className="text-center text-white text-sm text-muted-foreground">
+            &copy; 2024 TodoMaster. All rights reserved. |{" "}
             <Link href="/privacy" className="hover:underline">
               Privacy Policy
             </Link>{" "}

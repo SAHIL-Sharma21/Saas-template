@@ -1,6 +1,6 @@
 'use client'
 
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/navigation';
 import React from 'react'
 import { Button } from './ui/button';
 import { ChevronLeft } from 'lucide-react';

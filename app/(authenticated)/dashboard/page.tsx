@@ -189,8 +189,8 @@ function Dashboard() {
 
   return (
     <>
-      <div className="container mx-auto p-4 max-w-3xl mb-8">
-        <h1 className="text-3xl font-bold mb-8 text-center">
+      <div className="container mx-auto p-4 mt-4  mb-8 bg-gray-800 border-none">
+        <h1 className="text-3xl font-bold mb-8 text-center text-white ">
           Welcome, {user?.emailAddresses[0].emailAddress}
         </h1>
         <Card className="mb-8">

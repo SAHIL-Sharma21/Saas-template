@@ -56,7 +56,7 @@ function SignIn() {
 
   return (
     <>
-      <div className="flex items-center justify-center min-h-screen bg-background">
+      <div className="flex items-center justify-center min-h-screen bg-gray-800">
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle className="text-2xl font-bold text-center">
@@ -64,7 +64,7 @@ function SignIn() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <form onSubmit={submit}>
+            <form onSubmit={submit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -79,7 +79,7 @@ function SignIn() {
                 <Label htmlFor="password">Password</Label>
                 <div className="relative">
                   <Input
-                    type="password"
+                    type={showPassword ? "text": "password"}
                     id="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -103,7 +103,7 @@ function SignIn() {
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
-              <Button className="w-full" type="submit">
+              <Button className="w-full mt-4" type="submit">
                 SignIn
               </Button>
             </form>
